@@ -4,9 +4,8 @@ extends State
 @export var move_speed: float = 300.0
 
 func enter():
-	pass #remove this later once we have animations
 	# Play the move/run animation
-	# player.get_node("AnimatedSprite2D").play("run")
+	player.get_node("AnimatedSprite2D").play("run")
 
 func process_physics(delta: float):
 	# Check for transitions first.
