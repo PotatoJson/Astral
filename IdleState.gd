@@ -1,18 +1,28 @@
 # IdleState.gd
 extends State
 
-func enter():
+@export var dash_state: State
+@export var move_state: State
+@export var jab_state: State
+@export var hook_state: State
+
+
+func enter() -> void:
+	super()
 	# When entering the idle state, stop all movement.
-	player.velocity = Vector2.ZERO
-	# play Idle animation here
-	player.get_node("AnimatedSprite2D").play("idle")
+	parent.velocity = Vector2.ZERO
 
 func process_frame(_delta):
+	if Input.is_action_just_pressed("jab"):
+		return jab_state
+		
+	if Input.is_action_just_pressed("hook"):
+		return hook_state
+	
 	# Check for transitions out of Idle.
 	if Input.is_action_just_pressed("dash"):
-		state_machine.transition_to("Dash")
-		return # exit the function after a transition.
+		return dash_state # exit the function after a transition.
 
-	var move_input = Input.get_vector("ui_left", "ui_right", "ui_up", "ui_down")
+	var move_input = Input.get_vector("move_left", "move_right", "move_up", "move_down")
 	if move_input != Vector2.ZERO:
-		state_machine.transition_to("Move")
+		return move_state

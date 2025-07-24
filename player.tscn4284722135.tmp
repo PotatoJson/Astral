@@ -1,17 +1,15 @@
-[gd_scene load_steps=57 format=3 uid="uid://dw6lmprwygaim"]
+[gd_scene load_steps=48 format=3 uid="uid://dw6lmprwygaim"]
 
 [ext_resource type="Script" uid="uid://ltiy2b2turlr" path="res://player.gd" id="1_onrkg"]
 [ext_resource type="Texture2D" uid="uid://dlavtm2p3qqte" path="res://Player Roll 48x48.png" id="2_1jxqw"]
 [ext_resource type="Texture2D" uid="uid://c2bupkxke8tjp" path="res://Player Idle 48x48.png" id="2_2hs0m"]
 [ext_resource type="Script" uid="uid://bokuqbvo6uhos" path="res://StateMachine.gd" id="3_hqtel"]
-[ext_resource type="Texture2D" uid="uid://dsgfo0iyk3wpc" path="res://Player Punch Cross 64x64.png" id="3_nvl01"]
 [ext_resource type="Texture2D" uid="uid://be4lrohorodb5" path="res://Player Jab 48x48.png" id="4_b26j0"]
 [ext_resource type="Texture2D" uid="uid://do34gef85qwaa" path="res://player run 48x48.png" id="4_dw050"]
 [ext_resource type="Script" uid="uid://cl4saysuje7ij" path="res://IdleState.gd" id="4_sweqy"]
 [ext_resource type="Script" uid="uid://cxou0rirm4cxl" path="res://MoveState.gd" id="5_2hs0m"]
 [ext_resource type="Script" uid="uid://wfbxrpju0as1" path="res://DashState.gd" id="6_1jxqw"]
 [ext_resource type="Script" uid="uid://cak5o8rawaxmj" path="res://JabState.gd" id="10_n7ghd"]
-[ext_resource type="Script" uid="uid://y1ykc1be4t2y" path="res://HookState.gd" id="12_ivps1"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_onrkg"]
 size = Vector2(12, 27)
@@ -43,34 +41,6 @@ region = Rect2(240, 0, 48, 48)
 [sub_resource type="AtlasTexture" id="AtlasTexture_7lmhl"]
 atlas = ExtResource("2_1jxqw")
 region = Rect2(288, 0, 48, 48)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_ibah8"]
-atlas = ExtResource("3_nvl01")
-region = Rect2(0, 0, 64, 64)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_3iwfv"]
-atlas = ExtResource("3_nvl01")
-region = Rect2(64, 0, 64, 64)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_qwsg1"]
-atlas = ExtResource("3_nvl01")
-region = Rect2(128, 0, 64, 64)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_1xqrm"]
-atlas = ExtResource("3_nvl01")
-region = Rect2(192, 0, 64, 64)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_bfour"]
-atlas = ExtResource("3_nvl01")
-region = Rect2(256, 0, 64, 64)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_8gr2b"]
-atlas = ExtResource("3_nvl01")
-region = Rect2(320, 0, 64, 64)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_vl8ci"]
-atlas = ExtResource("3_nvl01")
-region = Rect2(384, 0, 64, 64)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_1jxqw"]
 atlas = ExtResource("2_2hs0m")
@@ -214,32 +184,6 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_ibah8")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_3iwfv")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_qwsg1")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_1xqrm")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_bfour")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_8gr2b")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_vl8ci")
-}],
-"loop": false,
-"name": &"hook",
-"speed": 10.0
-}, {
-"frames": [{
-"duration": 1.0,
 "texture": SubResource("AtlasTexture_1jxqw")
 }, {
 "duration": 1.0,
@@ -304,9 +248,9 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_ny14h")
 }],
-"loop": false,
+"loop": true,
 "name": &"jab",
-"speed": 27.0
+"speed": 5.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -350,7 +294,7 @@ shape = SubResource("RectangleShape2D_onrkg")
 unique_name_in_owner = true
 position = Vector2(2, -7)
 sprite_frames = SubResource("SpriteFrames_i3pqv")
-animation = &"hook"
+animation = &"jab"
 
 [node name="Camera2D" type="Camera2D" parent="."]
 visible = false
@@ -359,20 +303,16 @@ visible = false
 script = ExtResource("3_hqtel")
 starting_state = NodePath("Idle")
 
-[node name="Idle" type="Node" parent="StateMachine" node_paths=PackedStringArray("dash_state", "move_state", "jab_state", "hook_state")]
+[node name="Idle" type="Node" parent="StateMachine" node_paths=PackedStringArray("dash_state", "move_state")]
 script = ExtResource("4_sweqy")
 dash_state = NodePath("../Dash")
 move_state = NodePath("../Move")
-jab_state = NodePath("../Jab")
-hook_state = NodePath("../Hook")
 animation_name = "idle"
 
-[node name="Move" type="Node" parent="StateMachine" node_paths=PackedStringArray("dash_state", "idle_state", "jab_state", "hook_state")]
+[node name="Move" type="Node" parent="StateMachine" node_paths=PackedStringArray("dash_state", "idle_state")]
 script = ExtResource("5_2hs0m")
 dash_state = NodePath("../Dash")
 idle_state = NodePath("../Idle")
-jab_state = NodePath("../Jab")
-hook_state = NodePath("../Hook")
 animation_name = "move"
 
 [node name="Dash" type="Node" parent="StateMachine" node_paths=PackedStringArray("idle_state", "move_state")]
@@ -381,13 +321,9 @@ idle_state = NodePath("../Idle")
 move_state = NodePath("../Move")
 animation_name = "dash"
 
-[node name="Jab" type="Node" parent="StateMachine" node_paths=PackedStringArray("idle_state", "move_state")]
+[node name="Jab" type="Node" parent="StateMachine" node_paths=PackedStringArray("move_state", "idle_state")]
 script = ExtResource("10_n7ghd")
-idle_state = NodePath("../Idle")
 move_state = NodePath("../Move")
+idle_state = NodePath("../Idle")
 animation_name = "jab"
-
-[node name="Hook" type="Node" parent="StateMachine" node_paths=PackedStringArray("idle_state", "move_state")]
-script = ExtResource("12_ivps1")
-idle_state = NodePath("../Idle")
-move_state = NodePath("../Move")
+move_speed = null

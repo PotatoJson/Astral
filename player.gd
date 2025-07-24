@@ -1,14 +1,23 @@
+#player.gd
+class_name Player
 extends CharacterBody2D
 
-@export var speed = 300.0
+@onready
+var animations = $AnimatedSprite2D
 
-func _physics_process(delta):
-	# Get input from the arrow keys or WASD using the pre-defined input actions.
-	# This returns a direction vector, like (1, 0) for right or (-1, -1) for up-left.
-	var direction = Input.get_vector("ui_left", "ui_right", "ui_up", "ui_down")
+@onready
+var state_machine = $StateMachine
 
-	# Set the velocity.
-	velocity = direction * speed
+func _ready() -> void:
+	# Initialize the state machine, passing a reference of the player to the states,
+	# that way they can move and react accordingly
+	state_machine.init(self)
 
-	# This is the built-in function that moves the body and handles collisions.
-	move_and_slide()
+func _unhandled_input(event: InputEvent) -> void:
+	state_machine.process_input(event)
+
+func _physics_process(delta: float) -> void:
+	state_machine.process_physics(delta)
+
+func _process(delta: float) -> void:
+	state_machine.process_frame(delta)
