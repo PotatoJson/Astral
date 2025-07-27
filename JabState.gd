@@ -4,7 +4,7 @@ extends State
 # This state assumes you have an AnimatedSprite2D node in your scene
 # named "AnimatedSprite2D" (or you can change the node path).
 # It also assumes you have an animation named "jab".
-@onready var animation_player = %AnimatedSprite2D
+@export var animation_player: AnimationPlayer
 
 # Assign these states in the Inspector so the JabState
 # knows where to go when it's finished.
@@ -18,7 +18,8 @@ var next_state: State = null
 # The enter() function runs once when the state is entered.
 # It should run quickly and not use 'await'.
 func enter() -> void:
-	super()
+	#super()
+	animation_player.play("play_jab")
 	# Reset the next state on each new jab.
 	next_state = null
 
@@ -26,7 +27,7 @@ func enter() -> void:
 	parent.velocity = Vector2.ZERO
 
 	# 2. Play the jab animation.
-	animation_player.play("jab")
+	#animation_player.play("jab")
 
 	# 3. Connect the animation_finished signal to our function.
 	#    This does NOT pause the code. The state will continue running
@@ -42,16 +43,20 @@ func process_physics(_delta: float) -> State:
 
 
 # This function is called ONLY when the "jab" animation finishes.
-func _on_jab_finished() -> void:
-	# It's good practice to disconnect a one-shot signal.
-	animation_player.animation_finished.disconnect(_on_jab_finished)
+func _on_jab_finished(anim_name: StringName) -> void:
+	# Only proceed if the correct animation finished.
+	if anim_name != "play_jab":
+		return
 
-	# Now we decide which state to enter next based on player input.
+	#animation_player.animation_finished.disconnect(_on_jab_finished)
+
 	var move_input = Input.get_vector("move_left", "move_right", "move_up", "move_down")
 	if move_input != Vector2.ZERO:
 		next_state = move_state
 	else:
 		next_state = idle_state
+	# It's good practice to disconnect a one-shot signal.
+	animation_player.animation_finished.disconnect(_on_jab_finished)
 
 
 # The exit() function is a good place for cleanup.
